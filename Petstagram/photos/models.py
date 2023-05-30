@@ -9,7 +9,7 @@ class Photo(models.Model):
 
     photo = models.ImageField(
         validators=(validate_image_less_than_5mb,),
-        upload_to='mediafiles/',
+        upload_to='pet_photos/',
         null=False,
         blank=False
     )

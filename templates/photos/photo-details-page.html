@@ -46,7 +46,7 @@
                                 </a>
 
                                 <!-- Link to Delete Pet Photo Page -->
-                                <a href="{% url 'delete pet' username='user' slug='pet' %}">
+                                <a href="{% url 'delete photo' pk=photo.pk %}">
                                     <img class="bin-img" src="{% static 'images/icon-remove-22.jpg' %}" alt="bin button">
                                 </a>
                             </div>
@@ -61,7 +61,7 @@
                 <!-- Start Pet Photo -->
                 <div class="imgBx" id="place the id of the photo here">
                     <!-- Pet Photo -->
-                    <img src="{% static 'images/axolotl.jpeg' %}" alt="post" class="cover">
+                    <img src="/media/{{ photo.photo }}" alt="photos of {{ photo.tagged_pets.all|join:', ' }}" class="cover">
                 </div>
                 <!-- End Pet Photo -->
 
@@ -178,6 +178,7 @@
                                     <p>
                                         <!-- Link to User Profile Details Page-->
                                         <!-- User First and/or Last Name or username-->
+                                        {# TODO: fix when auth #}
                                         <a href="{% url 'details user' pk=1 %}">Steven Ivanov</a>
                                         <!-- User Comment -->
                                         - {{ comment.text }}
@@ -200,12 +201,17 @@
                     </div>
 
                     <!-- Start Add Comments Form -->
-                    <form method="post" action="#">
-                        <label for="id_body">Body:</label>
-                        <textarea name="body" cols="40" rows="10" placeholder="Add comment..." maxlength="300"
-                                  required="" id="id_body"></textarea>
-                        <!-- Post Comments Button -->
-                        <button type="submit">Post</button>
+{#                    <form method="post" action="#">#}
+{#                        <label for="id_body">Body:</label>#}
+{#                        <textarea name="body" cols="40" rows="10" placeholder="Add comment..." maxlength="300"#}
+{#                                  required="" id="id_body"></textarea>#}
+{#                        <!-- Post Comments Button -->#}
+{#                        <button type="submit">Post</button>#}
+{#                    </form>#}
+                    <form action="{% url 'add comment' photo_id=photo.pk %}" method="post">
+                        {{ comment_form }}
+                        {% csrf_token %}
+                        <button type="submit">Submit</button>
                     </form>
                     <!-- End Add Comments Form -->
 
