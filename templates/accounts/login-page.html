@@ -8,7 +8,7 @@
 
             <!-- Start Login Form-->
             <form action="{% url 'login user' %}" method="post">
-                {{ form.username|placeholder:'Username' }}
+                {{ form.username|placeholder:'Username'|form_field_class:'class_from_templatetags' }}
                 {{ form.password|placeholder:'Password' }}
                 <input type="hidden" name="next" value="{{ next }}">
                 {% csrf_token %}

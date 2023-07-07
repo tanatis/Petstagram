@@ -19,6 +19,11 @@ def index(request):
     if search_pattern:
         all_photos = all_photos.filter(tagged_pets__name__icontains=search_pattern)
 
+    # На всяка снимка която е лайкната от юзъра и слагаме liked_by_user за да може в темплейта да не е
+    # червена ако не е лайкната
+    for photo in all_photos:
+        photo.liked_by_user = photo.like_set.filter(user=request.user).exists()
+
     context = {
         'all_photos': all_photos,
         'comment_form': comment_form,

@@ -10,7 +10,7 @@
             <!-- Start Register Form -->
             <form action="{% url 'register user' %}" method="post">
                 {{ form.username.errors }}
-                {{ form.username|placeholder:'Username' }}
+                {{ form.username|placeholder:'Username'|form_field_class:'username-class' }}
                 {{ form.email.errors }}
                 {{ form.email|placeholder:'Email' }}
                 {{ form.password1.errors }}

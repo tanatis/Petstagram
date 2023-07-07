@@ -1,10 +1,12 @@
+from django.conf.urls.static import static
 from django.contrib.auth.views import LoginView
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import generic as views
-from django.contrib.auth import views as auth_views, get_user_model
+from django.contrib.auth import views as auth_views, get_user_model, login
 
-from Petstagram.accounts.forms import AppUserCreateForm, UserEditForm
+from Petstagram.accounts.forms import AppUserCreateForm, UserEditForm, AppUserLoginForm
 
 # !!! Always get the 'user model' with 'get_user_model()'  !!!
 UserModel = get_user_model()
@@ -12,13 +14,25 @@ UserModel = get_user_model()
 
 class SignInView(auth_views.LoginView):
     template_name = 'accounts/login-page.html'
+    # In order to have custom placeholders or labels ... have to create a form in forms.py
+    form_class = AppUserLoginForm
 
 
 class SignUpView(views.CreateView):
     model = UserModel
     form_class = AppUserCreateForm
     template_name = 'accounts/register-page.html'
-    success_url = reverse_lazy('login user')
+    #success_url = reverse_lazy('index')
+
+    # Automatically login after registration:
+    def form_valid(self, form):
+        result = super().form_valid(form)
+        user = self.object
+        login(self.request, user)
+        return result
+
+    def get_success_url(self):
+        return reverse_lazy('index')
 
 
 class SignOutView(auth_views.LogoutView):
@@ -30,7 +44,15 @@ class UserDetailsView(views.DetailView):
     model = UserModel
 
     def get_context_data(self, **kwargs):
+        # Проверяваме дали има качена снимка или да покажем дефолтната
+        # в темплейта подаваме само {{ profile_picture }}
+        # а проверките ги правим тук, вместо в темплейта
+        # profile_picture = static('images/person.png')
+        # if self.object.profile_picture is not None:
+        #     profile_picture = self.object.profile_picture
+
         context = super().get_context_data(**kwargs)
+        #context['profile_picture'] = profile_picture
         context['is_owner'] = self.request.user == self.object
         context['pets_count'] = self.object.pet_set.count()
 

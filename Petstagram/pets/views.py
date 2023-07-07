@@ -43,6 +43,7 @@ def add_pet(request):
     return render(request, 'pets/pet-add-page.html', context)
 
 
+@login_required()
 def edit_pet(request, slug, username):
     pet = get_pet_by_name_and_username(slug, username)
 
@@ -65,6 +66,7 @@ def edit_pet(request, slug, username):
     return render(request, 'pets/pet-edit-page.html', context)
 
 
+@login_required()
 def delete_pet(request, username, slug):
     pet = get_pet_by_name_and_username(slug, username)
     if request.method == 'GET':

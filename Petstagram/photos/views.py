@@ -42,6 +42,7 @@ def details_photo(request, pk):
     return render(request, 'photos/photo-details-page.html', context)
 
 
+@login_required()
 def edit_photo(request, pk):
     photo = Photo.objects.filter(pk=pk).get()
     if request.method == 'GET':
@@ -58,6 +59,7 @@ def edit_photo(request, pk):
     return render(request, 'photos/photo-edit-page.html', context)
 
 
+@login_required()
 def delete_photo(request, pk):
     photo = Photo.objects.filter(pk=pk).get()
     photo.delete()
